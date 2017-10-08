@@ -1,0 +1,44 @@
+html{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.menu {
+  margin: 0 0 0 0;
+  width: 150px;
+  height: 100%;
+  background-color: #FFF;
+  border: 2px solid #F3F3F3;
+}
+
+.game {
+  margin: 0 0 0 0;
+  height: 100%;
+  border: 1px solid white;
+}
+
+#root {
+  margin: 0 0 0 0;
+  height: 100%;
+  border: 1px solid white;
+}
+
+.menuSubject {
+  margin: 0 0 0 0;
+  height: 50px;
+  width: 100%;
+  background-color: #FF2277;
+  border: 1px solid black;
+}
+
+.menuSubject:hover {
+  background-color: #FF1155;
+}
