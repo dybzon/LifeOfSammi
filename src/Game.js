@@ -84,6 +84,21 @@ export default class Game extends React.Component {
     this.spawnItem = this.spawnItem.bind(this)
   };
 
+  componentDidMount() {
+		this.setBodyPosition();
+  }
+
+  // Set the correct position of the body. This will be called when the game is initiated.
+  setBodyPosition() {
+  	var newData = this.state.data;
+    var bodyIndex = newData.currentItems.findIndex(item => item.type === 'Body');
+    var body = newData.currentItems[bodyIndex];
+
+    body.x = window.innerWidth / 2 - body.w / 2; // Middle of window
+    body.y = window.innerHeight - body.h; // Buttom of window
+    this.setState({data: newData});
+  }
+
   renderExternalItem(id,x,y,imageSrc,h,w,type,desc,draggable,xOffset,yOffset){
   	var layerType = layeringOrder.find(t => t.type === type); // Find the layer value for the type
   	var zIndex = typeof layerType !== "undefined" ? layerType.layer : 0; 
@@ -104,30 +119,38 @@ export default class Game extends React.Component {
     )
   };
 
-  renderBackgroundButton(id,x,y,imageSrc,h,w,direction) {
+  renderBackgroundButton(id,x,y,imageSrc,h,w,direction,horizontalOrientation,verticalOrientation) {
   	return (
   		<Button id={id} key={id} x={x} y={y} imageSrc={imageSrc} h={h} w={w} clickValue={direction} 
+        horizontalOrientation={horizontalOrientation}
+        verticalOrientation={verticalOrientation}
   			onMouseDown={direction => this.changeBackgroundImage(direction)} desc="BackgroundButton" />
   	)
   };
 
-  renderMusicButton(id,x,y,imageSrc,h,w,direction) {
+  renderMusicButton(id,x,y,imageSrc,h,w,direction,horizontalOrientation,verticalOrientation) {
   	return (
   		<Button id={id} key={id} x={x} y={y} imageSrc={imageSrc} h={h} w={w} clickValue={direction} 
+        horizontalOrientation={horizontalOrientation}
+        verticalOrientation={verticalOrientation}
 	  		onMouseDown={direction => this.switchAudio(direction)} desc="MusicButton" />
   	)
   };
 
-  renderSnapToSammiButton(id,x,y,imageSrc,h,w) {
+  renderSnapToSammiButton(id,x,y,imageSrc,h,w,horizontalOrientation,verticalOrientation) {
   	return (
   		<Button id={id} key={id} x={x} y={y} imageSrc={imageSrc} h={h} w={w} clickValue={null} 
+        horizontalOrientation={horizontalOrientation}
+        verticalOrientation={verticalOrientation}
 	  		onMouseDown={b => this.switchSnapToSammi(b)} desc="SnapToSammiButton" />
   	)
   };
 
-  renderFoodButton(id,x,y,imageSrc,h,w) {
+  renderFoodButton(id,x,y,imageSrc,h,w,horizontalOrientation,verticalOrientation) {
   	return (
   		<Button id={id} key={id} x={x} y={y} imageSrc={imageSrc} h={h} w={w} clickValue="" 
+        horizontalOrientation={horizontalOrientation}
+        verticalOrientation={verticalOrientation}
   			onMouseDown={clickValue => this.spawnFood(clickValue)} desc="FoodButton" />
   	)
   };
@@ -297,7 +320,7 @@ export default class Game extends React.Component {
     if(this.state.snapToSammi && wearableTypes.indexOf(updatedItem.type) > -1 && overlapsBody) {
     	console.log(item.desc.substr(0,item.desc.indexOf('.') > 0 ? item.desc.indexOf('.') : item.desc.length) + " was dropped on Sammi.");
     	// if(typeof updatedItem.xOffset !== "undefined" && typeof updatedItem.yOffset !== "undefined"){
-    	if("xOffset" in updatedItem && "yOffset" in updatedItem){
+    	if("xOffset" in updatedItem && "yOffset" in updatedItem && updatedItem.xOffset != 0 && updatedItem.yOffset != 0){
     		console.log("Sammi likes this item. He will put it on.");
 	    	// Set position of item relative to Sammi, using the updatedItem.xOffset and updatedItem.yOffset
 		    newData.currentItems[itemIndex].x = body.x + updatedItem.xOffset;
@@ -329,6 +352,7 @@ export default class Game extends React.Component {
 		this.setState({snapToSammi: !this.state.snapToSammi});
 	};
 
+	// Delete a current item from the game (i.e. add it to the list of items not to be rendered)
   onDelete(id) {
     this.setState({ deleted: this.state.deleted.concat([id]) })
   };
@@ -350,18 +374,18 @@ export default class Game extends React.Component {
     // Render background buttons
     var backgroundButtons = this.state.data.backgroundButtons
       .map(btn =>
-      	this.renderBackgroundButton(btn.id, btn.x, btn.y, btn.imageSrc, btn.h, btn.w, btn.direction)
+      	this.renderBackgroundButton(btn.id, btn.x, btn.y, btn.imageSrc, btn.h, btn.w, btn.direction, btn.horizontalOrientation, btn.verticalOrientation)
       );
 
     // Render music buttons
     var musicButtons = this.state.data.musicButtons
     	.map(btn =>
-      	this.renderMusicButton(btn.id, btn.x, btn.y, btn.imageSrc, btn.h, btn.w, btn.direction)
+      	this.renderMusicButton(btn.id, btn.x, btn.y, btn.imageSrc, btn.h, btn.w, btn.direction, btn.horizontalOrientation, btn.verticalOrientation)
     	);
 
     var snapToSammiButton = this.state.data.snapToSammiButton
     	.map(btn =>
-      	this.renderSnapToSammiButton(btn.id, btn.x, btn.y, btn.imageSrc, btn.h, btn.w, btn.direction)
+      	this.renderSnapToSammiButton(btn.id, btn.x, btn.y, btn.imageSrc, btn.h, btn.w, btn.horizontalOrientation, btn.verticalOrientation)
     	);
 
 		return (
@@ -370,7 +394,7 @@ export default class Game extends React.Component {
 	    	<Menu images={images} menuSubjects={menuSubjects} itemOnMouseDown={i => this.spawnItem(i)} />
 	    	{backgroundButtons}
 	    	{musicButtons}
-	    	{this.renderFoodButton(20, 1345, 20, getImg('FoodButton'), 60, 60)}
+	    	{this.renderFoodButton(20, 150, 20, getImg('FoodButton'), 60, 60, "right", "top")}
 	    	{items}
 	     	{bins}
 	     	<Version />

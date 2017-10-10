@@ -39,6 +39,11 @@ var initialData = {
   configurationItems: [
     {type: "Clothes", fileName: "TShirtRainbowsAreGay.png", x: 900, y: 400, h: 260, w: 190, draggable: true, xOffset: 110, yOffset: 125,},
     {type: "Clothes", fileName: "Bra.png", x: 900, y: 400, h: 80, w: 200, draggable: true, xOffset: 100, yOffset: 160,},
+    {type: "Clothes", fileName: "Overalls.png", x: 900, y: 400, h: 600, w: 300, draggable: true, xOffset: 45, yOffset: 110,},
+    {type: "Clothes", fileName: "Hotjeans.png", x: 900, y: 400, h: 180, w: 194, draggable: true, xOffset: 95, yOffset: 332,},
+    {type: "Clothes", fileName: "Wifebeater.png", x: 900, y: 400, h: 243, w: 151, draggable: true, xOffset: 121, yOffset: 127,},
+    {type: "Clothes", fileName: "ColorHoodie.png", x: 900, y: 400, h: 320, w: 250, draggable: true, xOffset: 75, yOffset: 82,},
+    {type: "Clothes", fileName: "LeatherVest.png", x: 900, y: 400, h: 260, w: 195, draggable: true, xOffset: 98, yOffset: 115,},
     {type: "Food", fileName: "Knoppers.png", x: 900, y: 400, h: 150, w: 150, draggable: true,},
     {type: "Hobby", fileName: "PizzaShovel.png", x: 900, y: 400, h: 200, w: 200, draggable: true,},
     {type: "Hobby", fileName: "PoliceStick.png", x: 900, y: 400, h: 250, w: 150, draggable: true,},
@@ -46,6 +51,7 @@ var initialData = {
     {type: "Hobby", fileName: "Mountainbike.png", x: 900, y: 400, h: 211, w: 388, draggable: true,},
     {type: "Hobby", fileName: "Wakeboard.png", x: 900, y: 400, h: 731, w: 229, draggable: true,},
     {type: "Hobby", fileName: "Audi.png", x: 900, y: 400, h: 245, w: 460, draggable: true,},
+    {type: "Hobby", fileName: "DeWaltDrill.png", x: 900, y: 400, h: 150, w: 150, draggable: true,},
     {type: "Hats", fileName: "PoliceHat.png", x: 900, y: 400, h: 90, w: 110, draggable: true, xOffset: 132, yOffset: -10,},
     {type: "Hats", fileName: "mario.png", x: 900, y: 400, h: 90, w: 100, draggable: true, xOffset: 136, yOffset: -4,},
     {type: "Hats", fileName: "hardhat.png", x: 900, y: 400, h: 90, w: 100, draggable: true, xOffset: 141, yOffset: -5,},
@@ -53,6 +59,7 @@ var initialData = {
     {type: "Hats", fileName: "RedHat2.png", x: 900, y: 400, h: 80, w: 110, draggable: true, xOffset: 136, yOffset: -4,},
     {type: "Hats", fileName: "ShitHat.png", x: 900, y: 400, h: 85, w: 100, draggable: true, xOffset: 141, yOffset: -25,},
     {type: "Hats", fileName: "santa.png", x: 900, y: 400, h: 125, w: 125, draggable: true, xOffset: 113, yOffset: -16,},
+    {type: "Hats", fileName: "Cap1.png", x: 900, y: 400, h: 68, w: 92, draggable: true, xOffset: 147, yOffset: 3,},
     {type: "Glasses", fileName: "Glasses1.png", x: 900, y: 400, h: 30, w: 90, draggable: true, xOffset: 151, yOffset: 80,},
     {type: "Glasses", fileName: "Glasses2.png", x: 900, y: 400, h: 30, w: 90, draggable: true, xOffset: 150, yOffset: 80,},
     {type: "Glasses", fileName: "Glasses3.png", x: 900, y: 400, h: 30, w: 90, draggable: true, xOffset: 150, yOffset: 78,},
@@ -66,9 +73,11 @@ var initialData = {
     {type: "Hair", fileName: "Beard8.png", x: 900, y: 400, h: 180, w: 130, draggable: true, xOffset: 130, yOffset: 10,},
     {type: "Hair", fileName: "Beard9.png", x: 900, y: 400, h: 80, w: 85, draggable: true, xOffset: 155, yOffset: 84,},
     {type: "Hair", fileName: "jesus.png", x: 900, y: 400, h: 310, w: 170, draggable: true, xOffset: 110, yOffset: 6,},
+    {type: "Hair", fileName: "BodyHair1.png", x: 900, y: 400, h: 92, w: 145, draggable: true, xOffset: 125, yOffset: 150,},
   ],
-  currentItems: [
-    {id: 1, x: 450, y: 160, imageSrc: getImg('Sammi3'), imageHighlightedSrc: getImg('SammiEating'), h: 600, w: 400, type: 'Body', desc: 'Sammi', draggable: false,
+  // currentItems determine what is current displayed in the game
+  currentItems: [ 
+    {id: 1, x: 450, y: 160, imageSrc: getImg('Sammi3'), imageHighlightedSrc: getImg('SammiEating1'), h: 600, w: 400, type: 'Body', desc: 'Sammi', draggable: false,
       sammiBodies: [
         {fatLevel: 0, imageSrc: getImg('Sammi3'), imageHighlightedSrc: getImg('SammiEating1')},
         {fatLevel: 4, imageSrc: getImg('FatSammi3'), imageHighlightedSrc: getImg('FatSammiEating3')},
@@ -80,23 +89,22 @@ var initialData = {
     {id: 1, x: 0, y: 0, imageSrc: getImg('Bin'), imageHighlightedSrc: getImg('BinHighlighted'), h: 200, w: 200}
   ],
   backgroundButtons: [
-    {id: 1, imageSrc: getImg('ArrowLeft'), x: 1300, y: 150, h: 50, w: 50, direction: -1},
-    {id: 2, imageSrc: getImg('ArrowRight'), x: 1400, y: 150, h: 50, w: 50, direction: 1},
-    {id: 3, imageSrc: getImg('TravelButton'), x: 1350, y: 150, h: 50, w: 50, direction: 0}, // This button is just for show. It has no effect.
+    {id: 1, imageSrc: getImg('ArrowLeft'), x: 200, y: 150, h: 50, w: 50, direction: -1, horizontalOrientation: "right", verticalOrientation: "top",},
+    {id: 2, imageSrc: getImg('ArrowRight'), x: 100, y: 150, h: 50, w: 50, direction: 1, horizontalOrientation: "right", verticalOrientation: "top",},
+    {id: 3, imageSrc: getImg('TravelButton'), x: 150, y: 150, h: 50, w: 50, direction: 0, horizontalOrientation: "right", verticalOrientation: "top",}, // This button is just for show. It has no effect.
   ],
   musicButtons: [
-    {id: 4, imageSrc: getImg('ArrowLeft'), x: 1300, y: 220, h: 50, w: 50, direction: -1},
-    {id: 5, imageSrc: getImg('ArrowRight'), x: 1400, y: 220, h: 50, w: 50, direction: 1},
-    {id: 6, imageSrc: getImg('MusicButton'), x: 1350, y: 220, h: 50, w: 50, direction: 0},
+    {id: 4, imageSrc: getImg('ArrowLeft'), x: 200, y: 220, h: 50, w: 50, direction: -1, horizontalOrientation: "right", verticalOrientation: "top",},
+    {id: 5, imageSrc: getImg('ArrowRight'), x: 100, y: 220, h: 50, w: 50, direction: 1, horizontalOrientation: "right", verticalOrientation: "top",},
+    {id: 6, imageSrc: getImg('MusicButton'), x: 150, y: 220, h: 50, w: 50, direction: 0, horizontalOrientation: "right", verticalOrientation: "top",},
   ],
   snapToSammiButton: [
-    {id: 7, imageSrc: getImg('GlueButton'), x: 1350, y: 95, h: 50, w: 50},  // Not currently used
+    {id: 7, imageSrc: getImg('GlueButton'), x: 150, y: 95, h: 50, w: 50, horizontalOrientation: "right", verticalOrientation: "top",},  // Not currently used
   ],
 }
 
 /*
   TODO:
-    - Make button positions relative to window size
     - Create a form component that takes imageSrc, height, width, and adds an ExternalItem component to the game based on these values. 
         This can be handled by adding the values to the Game's props.data.externalItems property.
     - Consider implementing a way to resize and turn items
