@@ -39,8 +39,8 @@ export default class MenuItem extends React.Component {
 
 	render() {
     var itemsPerColumn = Math.floor(window.innerHeight / this.props.h);
-    var left = 156 + Math.floor(this.props.id / itemsPerColumn) * this.props.w;
-    var top = 2 + (this.props.id) * this.props.h - (Math.floor(this.props.id / itemsPerColumn) * itemsPerColumn * this.props.h);
+    var left = 152 + Math.floor(this.props.id / itemsPerColumn) * this.props.w;
+    var top = 0 + (this.props.id) * this.props.h - (Math.floor(this.props.id / itemsPerColumn) * itemsPerColumn * this.props.h);
 
     // console.log("id: " + this.props.id + ", top: " + top + ", itemsPerColumn: " + itemsPerColumn + ", id/ipc floored: " + Math.floor(this.props.id / itemsPerColumn));
 

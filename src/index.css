@@ -15,30 +15,33 @@ body {
   margin: 0 0 0 0;
   width: 150px;
   height: 100%;
-  background-color: #FFF;
-  border: 2px solid #F3F3F3;
+  background-color: #EFEEE8;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  /*border: 2px solid black;#F3F3F3;*/
 }
 
 .game {
   margin: 0 0 0 0;
   height: 100%;
-  border: 1px solid white;
+  /*border: 1px solid white;*/
 }
 
 #root {
   margin: 0 0 0 0;
   height: 100%;
-  border: 1px solid white;
+  /*border: 1px solid white;*/
 }
 
 .menuSubject {
   margin: 0 0 0 0;
   height: 50px;
-  width: 100%;
-  background-color: #FF2277;
-  border: 1px solid black;
+  width: 150px;
+  background-color: #D0D6C9;
+  border-bottom: 1px solid black;
+  /*border: 1px solid black;*/
 }
 
 .menuSubject:hover {
-  background-color: #FF1155;
+  background-color: #EBF2E3;
 }

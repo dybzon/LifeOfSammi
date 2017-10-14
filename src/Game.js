@@ -71,17 +71,22 @@ export default class Game extends React.Component {
       audioSourceId: 3,
       audioPlaying: true,
   		snapToSammi: 1, // Determines whether snap-to-sammi functionality is turned on
+  		inputSequence: "", // Current sequence of keys that were inputted. Used for unlocking Sammi.
+  		sammiUnlocked: 0,
     }
 
 		document.body.style.background = "#f3f3f3 url("+getImg('BackgroundBedroom')+") no-repeat left top";
 		document.body.style.backgroundSize = "cover";
 
-    this.onDelete = this.onDelete.bind(this)
-    this.setBinPosition = this.setBinPosition.bind(this)
-    this.setItemPosition = this.setItemPosition.bind(this)
-    this.setItemHoveringPosition = this.setItemHoveringPosition.bind(this)
-    this.spawnFood = this.spawnFood.bind(this)
-    this.spawnItem = this.spawnItem.bind(this)
+    this.onDelete = this.onDelete.bind(this);
+    this.setBinPosition = this.setBinPosition.bind(this);
+    this.setItemPosition = this.setItemPosition.bind(this);
+    this.setItemHoveringPosition = this.setItemHoveringPosition.bind(this);
+    this.spawnFood = this.spawnFood.bind(this);
+    this.spawnItem = this.spawnItem.bind(this);
+    this.onKeyUp = this.onKeyUp.bind(this);
+
+    document.addEventListener('keyup', this.onKeyUp);
   };
 
   componentDidMount() {
@@ -99,12 +104,39 @@ export default class Game extends React.Component {
     this.setState({data: newData});
   }
 
-  renderExternalItem(id,x,y,imageSrc,h,w,type,desc,draggable,xOffset,yOffset){
-  	var layerType = layeringOrder.find(t => t.type === type); // Find the layer value for the type
-  	var zIndex = typeof layerType !== "undefined" ? layerType.layer : 0; 
+  // Check whether SAMMY was inputted from the keyboard. This is the secret code for unlocking Sammi!
+  onKeyUp(e) {
+  	var sammiString = "SAMMY";
+  	var newSequence = this.state.inputSequence.concat(String.fromCharCode(e.keyCode));
+  	if(sammiString.indexOf(newSequence) !== -1){
+	  	this.setState({inputSequence: newSequence});
+  		if(newSequence === sammiString){
+  			console.log("Sammi was unlocked!");
+  			this.setState({sammiUnlocked: 1});
+  			var newData = this.state.data;
+		    var bodyIndex = newData.currentItems.findIndex(item => item.type === 'Body');
+		    var body = newData.currentItems[bodyIndex];
+  			body.imageSrc =	body.sammiBodies.find(item => item.fatLevel >= this.state.fatLevel).imageSrc;
+  			this.setState({data: newData});
+  		}
+  	}
+  	else{
+  		this.setState({inputSequence: ""}); // Clear the input sequence if it is no longer a substring of SAMMY
+  	}
+	}
+
+  renderExternalItem(id,x,y,imageSrc,h,w,type,desc,draggable,xOffset,yOffset,zIndex){
+  	var zIndexFinal = 0;
+  	if(zIndex > 0){
+  		zIndexFinal = zIndex;
+  	}
+  	else{
+	  	var layerType = layeringOrder.find(t => t.type === type); // Find the layer value for the type
+	  	zIndexFinal = typeof layerType !== "undefined" ? layerType.layer : 0;  		
+  	}
     return (
       <ExternalItem key={id} id={id} x={x} y={y} imageSrc={imageSrc} h={h} w={w} type={type} desc={desc} draggable={draggable}
-      	zIndex={zIndex}
+      	zIndex={zIndexFinal}
       	xOffset={xOffset} yOffset={yOffset}
         onDelete={id => this.onDelete(id)} 
         setItemPosition={updatedItem => this.setItemPosition(updatedItem)} 
@@ -146,12 +178,13 @@ export default class Game extends React.Component {
   	)
   };
 
-  renderFoodButton(id,x,y,imageSrc,h,w,horizontalOrientation,verticalOrientation) {
+  renderFoodButton(id,x,y,imageSrc,h,w,horizontalOrientation,verticalOrientation,fatValue) {
   	return (
-  		<Button id={id} key={id} x={x} y={y} imageSrc={imageSrc} h={h} w={w} clickValue="" 
+  		<Button id={id} key={id} x={x} y={y} imageSrc={imageSrc} h={h} w={w} clickValue={fatValue}
         horizontalOrientation={horizontalOrientation}
         verticalOrientation={verticalOrientation}
-  			onMouseDown={clickValue => this.spawnFood(clickValue)} desc="FoodButton" />
+  			onMouseDown={clickValue => this.spawnFood(clickValue)} 
+  			desc="FoodButton" />
   	)
   };
 
@@ -198,6 +231,7 @@ export default class Game extends React.Component {
   		draggable: i.draggable,
   		xOffset: configurationItem ? configurationItem.xOffset : 0, // Offset used for snap-to-body functionality
   		yOffset: configurationItem ? configurationItem.yOffset : 0, // Offset used for snap-to-body functionality
+  		zIndex: configurationItem ? configurationItem.zIndex > 0 ? configurationItem.zIndex : -1 : -1,
   	};
 
   	// Add the foodspawn to the current items data
@@ -207,24 +241,24 @@ export default class Game extends React.Component {
   };
 
   spawnFood(o) {
-  	// Create a random food item
-  	var foodItems = this.state.data.allItems.filter(item => item.type === "Food");
-  	var copyItem = foodItems[Math.floor(Math.random()*foodItems.length)];
+  	// Create a random food item of the healthy or unhealthy type, depending on the fatValue of the button
+  	var foodImages = images.filter(i => i.type === (o.clickValue > 0 ? "UnhealthyFood" : "HealthyFood"));
+  	var image = foodImages[Math.floor(Math.random()*foodImages.length)];
 
   	// Find max id in external items
   	var currentMaxId = Math.max.apply(Math,this.state.data.currentItems.map(function(i) {return i.id;}));
   	// Create a new item
   	var foodSpawn = {
   			id: currentMaxId + 1,
-  			x: copyItem.x,
-  			y: copyItem.y,
-  			imageSrc: copyItem.imageSrc,
-  			h: copyItem.h,
-  			w: copyItem.w,
-  			type: copyItem.type,
-  			desc: copyItem.desc,
-  			draggable: copyItem.draggable,
-  			fat: copyItem.fat
+  			x: Math.floor(150 + Math.random() * 300),
+  			y: Math.floor(50 + Math.random() * 450),
+  			imageSrc: image.img,
+  			h: 150,
+  			w: 160,
+  			type: image.type,
+  			desc: image.fileName,
+  			draggable: true,
+  			fat: o.clickValue
   		};
 
   	// Add the foodspawn to the current items data
@@ -258,7 +292,7 @@ export default class Game extends React.Component {
     }
 
 		// If the item is eatable and hovering over Sammi, then highlight Sammi
-    if(hoveringItem.type === 'Food') {
+    if(hoveringItem.type.indexOf('Food') !== -1) {
 	    var bodyIndex = newData.currentItems.findIndex(item => item.type === 'Body');
 	    var body = newData.currentItems[bodyIndex];
         var overlapsBody = !((item.x + item.w) < body.x || 
@@ -296,7 +330,7 @@ export default class Game extends React.Component {
                     item.y + item.h < bin.y || 
                     item.y > bin.y + bin.h);
     if(overlapsBin){
-      this.setState({ deleted: this.state.deleted.concat([item.id]) })      
+      this.setState({ deleted: this.state.deleted.concat([item.id]) })
     }
 
     var bodyIndex = newData.currentItems.findIndex(item => item.type === 'Body');
@@ -307,12 +341,15 @@ export default class Game extends React.Component {
                 item.y > (body.y + body.h));
 
 		// If the item is eatable and dropped on Sammi, then Sammi will eat it
-    if(updatedItem.type === 'Food' && overlapsBody) {  
+    if(updatedItem.type.indexOf('Food') !== -1 && overlapsBody) {  
 			this.setState({ deleted: this.state.deleted.concat([item.id]) }); // Read about setState and how it's called
 			var newFatLevel = this.state.fatLevel+item.fat;
-			console.log("Sammi likes this food!");
+			console.log(item.fat > 0 ? "Sammi likes this food!" : "Sammi seems to be on a diet");
 			this.setState({ fatLevel: newFatLevel }); // Increment Sammi's fat level when he eats. Change this to add the nutrition value of the eaten item.
-			body.imageSrc = body.sammiBodies.find(item => item.fatLevel >= newFatLevel).imageSrc;
+			body.imageSrc = 
+				this.state.sammiUnlocked ?
+				body.sammiBodies.find(item => item.fatLevel >= newFatLevel).imageSrc :
+				body.otherBodies.find(item => item.fatLevel >= newFatLevel).imageSrc;
 	    this.setState({ data: newData }); // Is it possible to alter the state directly, or only via the setState method?
     }
 
@@ -334,6 +371,11 @@ export default class Game extends React.Component {
   };
 
 	switchAudio(o) {
+		//Return for weird values. Used for the music player background.
+		if(o.clickValue > 1){
+			return;
+		}
+
 		// If direction is 0, then we want to mute/unmute rather than changing tracks
 		if(o.clickValue === 0) {
 			this.setState({audioPlaying: !this.state.audioPlaying});
@@ -362,7 +404,8 @@ export default class Game extends React.Component {
     var items = this.state.data.currentItems
       .filter(item => this.state.deleted.indexOf(item.id) === -1)
       .map(item => 
-        this.renderExternalItem(item.id, item.x, item.y, item.imageSrc, item.h, item.w, item.type, item.desc, item.draggable, item.xOffset, item.yOffset)
+        this.renderExternalItem(item.id, item.x, item.y, item.imageSrc, item.h, item.w, 
+        	item.type, item.desc, item.draggable, item.xOffset, item.yOffset, item.zIndex > 0 ? item.zIndex : -1)
       );
 
     // Render the bin 
@@ -372,9 +415,12 @@ export default class Game extends React.Component {
       );
 
     // Render background buttons
+    var backgroundLeftOffset = window.innerWidth / 2 + 60 + 40; // Left button should be a little left of the middle of the screen
+    var backgroundRightOffset = window.innerWidth / 2 + 60 - 40; // Right button should be a little right of the middle of the screen
     var backgroundButtons = this.state.data.backgroundButtons
       .map(btn =>
-      	this.renderBackgroundButton(btn.id, btn.x, btn.y, btn.imageSrc, btn.h, btn.w, btn.direction, btn.horizontalOrientation, btn.verticalOrientation)
+      	this.renderBackgroundButton(btn.id, btn.direction > 0 ? backgroundRightOffset : backgroundLeftOffset, 
+      		btn.y, btn.imageSrc, btn.h, btn.w, btn.direction, btn.horizontalOrientation, btn.verticalOrientation)
       );
 
     // Render music buttons
@@ -385,7 +431,13 @@ export default class Game extends React.Component {
 
     var snapToSammiButton = this.state.data.snapToSammiButton
     	.map(btn =>
-      	this.renderSnapToSammiButton(btn.id, btn.x, btn.y, btn.imageSrc, btn.h, btn.w, btn.horizontalOrientation, btn.verticalOrientation)
+      	this.renderSnapToSammiButton(btn.id, btn.x, btn.y, 
+      		this.state.snapToSammi ? btn.activeImageSrc : btn.inactiveImageSrc, btn.h, btn.w, btn.horizontalOrientation, btn.verticalOrientation)
+    	);
+
+    var foodButtons = this.state.data.foodButtons
+    	.map(btn =>
+    		this.renderFoodButton(btn.id, btn.x, btn.y, btn.imageSrc, btn.h, btn.w, btn.horizontalOrientation, btn.verticalOrientation, btn.fatValue)
     	);
 
 		return (
@@ -394,7 +446,7 @@ export default class Game extends React.Component {
 	    	<Menu images={images} menuSubjects={menuSubjects} itemOnMouseDown={i => this.spawnItem(i)} />
 	    	{backgroundButtons}
 	    	{musicButtons}
-	    	{this.renderFoodButton(20, 150, 20, getImg('FoodButton'), 60, 60, "right", "top")}
+	    	{foodButtons}
 	    	{items}
 	     	{bins}
 	     	<Version />
