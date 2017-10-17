@@ -37,13 +37,15 @@ var initialData = {
   ],
   // Add configuration here for images, such as their size, spawn position, etc. Default values will be used if no configuration exists.
   configurationItems: [
-    {type: "Clothes", fileName: "TShirtRainbowsAreGay.png", x: 900, y: 400, h: 260, w: 190, draggable: true, xOffset: 110, yOffset: 125,},
-    {type: "Clothes", fileName: "Bra.png", x: 900, y: 400, h: 80, w: 200, draggable: true, xOffset: 100, yOffset: 160,},
-    {type: "Clothes", fileName: "Overalls.png", x: 900, y: 400, h: 600, w: 300, draggable: true, xOffset: 45, yOffset: 110,},
-    {type: "Clothes", fileName: "Hotjeans.png", x: 900, y: 400, h: 180, w: 194, draggable: true, xOffset: 95, yOffset: 332,},
-    {type: "Clothes", fileName: "Wifebeater.png", x: 900, y: 400, h: 243, w: 151, draggable: true, xOffset: 121, yOffset: 127,},
-    {type: "Clothes", fileName: "ColorHoodie.png", x: 900, y: 400, h: 320, w: 250, draggable: true, xOffset: 75, yOffset: 82,},
-    {type: "Clothes", fileName: "LeatherVest.png", x: 900, y: 400, h: 260, w: 195, draggable: true, xOffset: 98, yOffset: 115,},
+    {type: "Clothes", fileName: "TShirtRainbowsAreGay.png", x: 900, y: 400, h: 260, w: 190, draggable: true, xOffset: 110, yOffset: 125, zIndex: 18,},
+    {type: "Clothes", fileName: "Bra.png", x: 900, y: 400, h: 80, w: 200, draggable: true, xOffset: 100, yOffset: 160, zIndex: 16,},
+    {type: "Clothes", fileName: "Overalls.png", x: 900, y: 400, h: 600, w: 300, draggable: true, xOffset: 45, yOffset: 110, zIndex: 19,},
+    {type: "Clothes", fileName: "Lederhosen.png", x: 900, y: 400, h: 500, w: 210, draggable: true, xOffset: 85, yOffset: 122, zIndex: 19,},
+    {type: "Clothes", fileName: "Hotjeans.png", x: 900, y: 400, h: 180, w: 194, draggable: true, xOffset: 95, yOffset: 332, zIndex: 20,},
+    {type: "Clothes", fileName: "SwimmingShorts.png", x: 900, y: 400, h: 220, w: 194, draggable: true, xOffset: 95, yOffset: 332, zIndex: 20,},
+    {type: "Clothes", fileName: "Wifebeater.png", x: 900, y: 400, h: 243, w: 151, draggable: true, xOffset: 121, yOffset: 127, zIndex: 17,},
+    {type: "Clothes", fileName: "ColorHoodie.png", x: 900, y: 400, h: 320, w: 250, draggable: true, xOffset: 75, yOffset: 82, zIndex: 20,},
+    {type: "Clothes", fileName: "LeatherVest.png", x: 900, y: 400, h: 260, w: 195, draggable: true, xOffset: 98, yOffset: 115, zIndex: 21,},
     {type: "Food", fileName: "Knoppers.png", x: 900, y: 400, h: 150, w: 150, draggable: true,},
     {type: "Hobby", fileName: "PizzaShovel.png", x: 900, y: 400, h: 200, w: 200, draggable: true,},
     {type: "Hobby", fileName: "PoliceStick.png", x: 900, y: 400, h: 250, w: 150, draggable: true,},
@@ -54,8 +56,13 @@ var initialData = {
     {type: "Hobby", fileName: "DeWaltDrill.png", x: 900, y: 400, h: 150, w: 150, draggable: true,},
     {type: "Hobby", fileName: "Motorcycle.png", x: 900, y: 400, h: 200, w: 400, draggable: true,},
     {type: "Hobby", fileName: "Cat.png", x: 900, y: 400, h: 150, w: 150, draggable: true,},
-    {type: "Hobby", fileName: "Pibe.png", x: 900, y: 400, h: 50, w: 50, draggable: true,},
-    {type: "Hobby", fileName: "Cigar.png", x: 900, y: 400, h: 50, w: 50, draggable: true,},
+    {type: "Accessories", fileName: "Pibe.png", x: 900, y: 400, h: 50, w: 50, draggable: true, xOffset: 200, yOffset: 123,},
+    {type: "Accessories", fileName: "Cigar.png", x: 900, y: 400, h: 50, w: 50, draggable: true, xOffset: 200, yOffset: 108,},
+    {type: "Accessories", fileName: "Bracelet1.png", x: 900, y: 400, h: 35, w: 35, draggable: true, xOffset: 290, yOffset: 390,},
+    {type: "Accessories", fileName: "Bracelet2.png", x: 900, y: 400, h: 35, w: 35, draggable: true, xOffset: 67, yOffset: 390,},
+    {type: "Accessories", fileName: "FlowerBracelet.png", x: 900, y: 400, h: 40, w: 50, draggable: true, xOffset: 61, yOffset: 390,},
+    {type: "Accessories", fileName: "GoldNecklace.png", x: 900, y: 400, h: 100, w: 100, draggable: true, xOffset: 153, yOffset: 125,},
+    {type: "Accessories", fileName: "DollarNecklace.png", x: 900, y: 400, h: 150, w: 100, draggable: true, xOffset: 153, yOffset: 123,},
     {type: "Hats", fileName: "PoliceHat.png", x: 900, y: 400, h: 90, w: 110, draggable: true, xOffset: 132, yOffset: -10,},
     {type: "Hats", fileName: "mario.png", x: 900, y: 400, h: 90, w: 100, draggable: true, xOffset: 136, yOffset: -4,},
     {type: "Hats", fileName: "hardhat.png", x: 900, y: 400, h: 90, w: 100, draggable: true, xOffset: 141, yOffset: -5,},
@@ -64,9 +71,11 @@ var initialData = {
     {type: "Hats", fileName: "ShitHat.png", x: 900, y: 400, h: 85, w: 100, draggable: true, xOffset: 141, yOffset: -25,},
     {type: "Hats", fileName: "santa.png", x: 900, y: 400, h: 125, w: 125, draggable: true, xOffset: 113, yOffset: -16,},
     {type: "Hats", fileName: "Cap1.png", x: 900, y: 400, h: 68, w: 92, draggable: true, xOffset: 147, yOffset: 3,},
+    {type: "Hats", fileName: "PumpkinHat.png", x: 900, y: 400, h: 185, w: 185, draggable: true, xOffset: 110, yOffset: -10,},
     {type: "Glasses", fileName: "Glasses1.png", x: 900, y: 400, h: 30, w: 90, draggable: true, xOffset: 151, yOffset: 80,},
     {type: "Glasses", fileName: "Glasses2.png", x: 900, y: 400, h: 30, w: 90, draggable: true, xOffset: 150, yOffset: 80,},
     {type: "Glasses", fileName: "Glasses3.png", x: 900, y: 400, h: 30, w: 90, draggable: true, xOffset: 150, yOffset: 78,},
+    {type: "Glasses", fileName: "CoolGlasses.png", x: 900, y: 400, h: 30, w: 86, draggable: true, xOffset: 153, yOffset: 78,},
     {type: "Hair", fileName: "Beard1.png", x: 900, y: 400, h: 100, w: 95, draggable: true, xOffset: 152, yOffset: 83,},
     {type: "Hair", fileName: "Beard2.png", x: 900, y: 400, h: 60, w: 85, draggable: true, xOffset: 155, yOffset: 101,},
     {type: "Hair", fileName: "Beard3.png", x: 900, y: 400, h: 75, w: 103, draggable: true, xOffset: 146, yOffset: 107,},
@@ -77,20 +86,22 @@ var initialData = {
     {type: "Hair", fileName: "Beard8.png", x: 900, y: 400, h: 180, w: 130, draggable: true, xOffset: 130, yOffset: 10,},
     {type: "Hair", fileName: "Beard9.png", x: 900, y: 400, h: 80, w: 85, draggable: true, xOffset: 155, yOffset: 84,},
     {type: "Hair", fileName: "jesus.png", x: 900, y: 400, h: 310, w: 170, draggable: true, xOffset: 110, yOffset: 6,},
+    {type: "Hair", fileName: "BunnyHair.png", x: 900, y: 400, h: 115, w: 150, draggable: true, xOffset: 127, yOffset: -25,},
     {type: "Hair", fileName: "BodyHair1.png", x: 900, y: 400, h: 92, w: 145, draggable: true, xOffset: 125, yOffset: 150, zIndex: 15,},
   ],
   // currentItems determine what is current displayed in the game
   currentItems: [ 
     {id: 1, x: 450, y: 160, imageSrc: getImg('Nobody'), imageHighlightedSrc: getImg('SammiEating1'), h: 600, w: 400, type: 'Body', desc: 'Sammi', draggable: false,
-      sammiBodies: [
-        {fatLevel: 0, imageSrc: getImg('Sammi3'), imageHighlightedSrc: getImg('SammiEating1'),},
-        {fatLevel: 4, imageSrc: getImg('FatSammi3'), imageHighlightedSrc: getImg('FatSammiEating3'),},
-        {fatLevel: 100, imageSrc: getImg('FatSammi4'), imageHighlightedSrc: getImg('FatSammiEating4'),},
-      ],
-      otherBodies: [
-        {fatLevel: 0, imageSrc: getImg('Nobody'), imageHighlightedSrc: getImg('SammiEating1'),},
-        {fatLevel: 4, imageSrc: getImg('FatNobody1'), imageHighlightedSrc: getImg('FatSammiEating3'),},
-        {fatLevel: 100, imageSrc: getImg('FatNobody2'), imageHighlightedSrc: getImg('FatSammiEating4'),},      
+      bodies: [
+        {fatLevel: 0, imageSrc: getImg('Sammi3'), imageHighlightedSrc: getImg('SammiEating1'), bodyType: 'SAMMY',},
+        {fatLevel: 4, imageSrc: getImg('FatSammi3'), imageHighlightedSrc: getImg('FatSammiEating3'), bodyType: 'SAMMY',},
+        {fatLevel: 100, imageSrc: getImg('FatSammi4'), imageHighlightedSrc: getImg('FatSammiEating4'), bodyType: 'SAMMY',},
+        {fatLevel: 0, imageSrc: getImg('Cookie3'), imageHighlightedSrc: getImg('SammiEating1'), bodyType: 'COOKIE',},
+        {fatLevel: 4, imageSrc: getImg('FatCookie3'), imageHighlightedSrc: getImg('FatSammiEating3'), bodyType: 'COOKIE',},
+        {fatLevel: 100, imageSrc: getImg('FatCookie4'), imageHighlightedSrc: getImg('FatSammiEating4'), bodyType: 'COOKIE',},
+        {fatLevel: 0, imageSrc: getImg('Nobody'), imageHighlightedSrc: getImg('SammiEating1'), bodyType: 'RandomDude',},
+        {fatLevel: 4, imageSrc: getImg('FatNobody1'), imageHighlightedSrc: getImg('FatSammiEating3'), bodyType: 'RandomDude',},
+        {fatLevel: 100, imageSrc: getImg('FatNobody2'), imageHighlightedSrc: getImg('FatSammiEating4'), bodyType: 'RandomDude',},
       ],
     },
     // {id: 2, x: 800, y: 200, imageSrc: getImg('MusicPlayer'), h: 300, w: 120, type: "MusicPlayer", desc: "Music player Ipod", draggable: false,},
@@ -126,7 +137,7 @@ var initialData = {
     - Sound effects
     - Implement a crab food type. This food should trigger CrabSammi.
     - Implement a way to mount Sammi?
-    - Add items: Kattegrus, Halloween pumpkin hat/head, Lederhosen,
+    - Add items: Kattegrus, Lederhosen,
 */
   
 ReactDOM.render(

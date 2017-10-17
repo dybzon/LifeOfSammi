@@ -47,15 +47,18 @@ const images = importAll(require.context('./img', true, /\.(png|jpe?g|svg)$/));
 const audioTracks = importAllAudio(require.context('./audio', false, /\.(mp3)$/));
 
 // Define subjects that should appear in the menu
-var menuSubjects = ["Hats", "Glasses", "Clothes", "Hobby", "Hair"];
-var wearableTypes = ["Hats", "Glasses", "Clothes", "Hair"];
-var layeringOrder = 
+const menuSubjects = ["Hats", "Glasses", "Clothes", "Hobby", "Hair", "Accessories"];
+const wearableTypes = ["Hats", "Glasses", "Clothes", "Hair", "Accessories"];
+const layeringOrder = 
 	[{type: "Hats", layer: 50}, 
-		{type: "Glasses", layer: 40}, 
+		{type: "Accessories", layer: 50},
+		{type: "Glasses", layer: 40},
 		{type: "Hair", layer: 30}, 
 		{type: "Clothes", layer: 20}, 
 		{type: "Hobby", layer: 60}, 
 		{type: "Food", layer: 70},];
+const bodyTypes = ["SAMMY", "COOKIE"];
+
 
 // The Game class should hold all other elements, and should fill the entire frame
 export default class Game extends React.Component {
@@ -72,7 +75,7 @@ export default class Game extends React.Component {
       audioPlaying: true,
   		snapToSammi: 1, // Determines whether snap-to-sammi functionality is turned on
   		inputSequence: "", // Current sequence of keys that were inputted. Used for unlocking Sammi.
-  		sammiUnlocked: 0,
+  		bodyType: "RandomDude",
     }
 
 		document.body.style.background = "#f3f3f3 url("+getImg('BackgroundBedroom')+") no-repeat left top";
@@ -104,20 +107,29 @@ export default class Game extends React.Component {
     this.setState({data: newData});
   }
 
+  bodyTypesContainSubstring(substring){
+  	var result = 0;
+  	for (var i = bodyTypes.length - 1; i >= 0; i--) {
+  		if(bodyTypes[i].indexOf(substring) > -1){
+  			result = 1;
+  		}
+  	}
+  	return result;
+  }
+
   // Check whether SAMMY was inputted from the keyboard. This is the secret code for unlocking Sammi!
   onKeyUp(e) {
-  	var sammiString = "SAMMY";
   	var newSequence = this.state.inputSequence.concat(String.fromCharCode(e.keyCode));
-  	if(sammiString.indexOf(newSequence) !== -1){
+  	if(this.bodyTypesContainSubstring(newSequence)){
 	  	this.setState({inputSequence: newSequence});
-  		if(newSequence === sammiString){
-  			console.log("Sammi was unlocked!");
-  			this.setState({sammiUnlocked: 1});
+  		if(bodyTypes.indexOf(newSequence) > -1){
+  			console.log(newSequence + " was unlocked!");
+  			this.setState({bodyType: newSequence});
   			var newData = this.state.data;
 		    var bodyIndex = newData.currentItems.findIndex(item => item.type === 'Body');
 		    var body = newData.currentItems[bodyIndex];
-  			body.imageSrc =	body.sammiBodies.find(item => item.fatLevel >= this.state.fatLevel).imageSrc;
-  			this.setState({data: newData});
+  			body.imageSrc =	body.bodies.find(item => item.bodyType === newSequence && item.fatLevel >= this.state.fatLevel).imageSrc;
+  			this.setState({data: newData, inputSequence: ""});
   		}
   	}
   	else{
@@ -300,12 +312,9 @@ export default class Game extends React.Component {
                     (item.y + item.h) < body.y || 
                     item.y > (body.y + body.h));
 
-			if(overlapsBody){
-				body.imageSrc = body.sammiBodies.find(item => item.fatLevel >= this.state.fatLevel).imageHighlightedSrc;
-			}
-			else{
-				body.imageSrc = body.sammiBodies.find(item => item.fatLevel >= this.state.fatLevel).imageSrc;
-			}
+      body.imageSrc = overlapsBody ? 
+  			body.imageSrc =	body.bodies.find(item => item.bodyType === this.state.bodyType && item.fatLevel >= this.state.fatLevel).imageHighlightedSrc :
+  			body.imageSrc =	body.bodies.find(item => item.bodyType === this.state.bodyType && item.fatLevel >= this.state.fatLevel).imageSrc;
 
 			newData.currentItems[bodyIndex] = body;
     }
@@ -344,28 +353,30 @@ export default class Game extends React.Component {
     if(updatedItem.type.indexOf('Food') !== -1 && overlapsBody) {  
 			this.setState({ deleted: this.state.deleted.concat([item.id]) }); // Read about setState and how it's called
 			var newFatLevel = this.state.fatLevel+item.fat;
-			console.log(item.fat > 0 ? "Sammi likes this food!" : "Sammi seems to be on a diet");
+			console.log(item.fat > 0 ?  this.state.bodyType + " likes this food!" : this.state.bodyType + " seems to be on a diet");
 			this.setState({ fatLevel: newFatLevel }); // Increment Sammi's fat level when he eats. Change this to add the nutrition value of the eaten item.
-			body.imageSrc = 
-				this.state.sammiUnlocked ?
-				body.sammiBodies.find(item => item.fatLevel >= newFatLevel).imageSrc :
-				body.otherBodies.find(item => item.fatLevel >= newFatLevel).imageSrc;
+			body.imageSrc =	body.bodies.find(item => item.bodyType === this.state.bodyType && item.fatLevel >= this.state.fatLevel).imageSrc;
+
+			// body.imageSrc = 
+			// 	this.state.sammiUnlocked ?
+			// 	body.sammiBodies.find(item => item.fatLevel >= newFatLevel).imageSrc :
+			// 	body.otherBodies.find(item => item.fatLevel >= newFatLevel).imageSrc;
 	    this.setState({ data: newData }); // Is it possible to alter the state directly, or only via the setState method?
     }
 
     // Implement snap-to-body functionality here
     if(this.state.snapToSammi && wearableTypes.indexOf(updatedItem.type) > -1 && overlapsBody) {
-    	console.log(item.desc.substr(0,item.desc.indexOf('.') > 0 ? item.desc.indexOf('.') : item.desc.length) + " was dropped on Sammi.");
+    	console.log(item.desc.substr(0,item.desc.indexOf('.') > 0 ? item.desc.indexOf('.') : item.desc.length) + " was dropped on " + this.state.bodyType);
     	// if(typeof updatedItem.xOffset !== "undefined" && typeof updatedItem.yOffset !== "undefined"){
     	if("xOffset" in updatedItem && "yOffset" in updatedItem && updatedItem.xOffset != 0 && updatedItem.yOffset != 0){
-    		console.log("Sammi likes this item. He will put it on.");
+    		console.log(this.state.bodyType + " likes this item. He will put it on.");
 	    	// Set position of item relative to Sammi, using the updatedItem.xOffset and updatedItem.yOffset
 		    newData.currentItems[itemIndex].x = body.x + updatedItem.xOffset;
 		    newData.currentItems[itemIndex].y = body.y + updatedItem.yOffset;
 		    this.setState({ data: newData });
     	}
     	else {
-    		console.log("Sammi does not know how to wear this item. He will leave it floating randomly.");
+    		console.log(this.state.bodyType + " does not know how to wear this item. He will leave it floating randomly.");
     	}
     }
   };
