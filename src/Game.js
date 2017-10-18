@@ -57,7 +57,7 @@ const layeringOrder =
 		{type: "Clothes", layer: 20}, 
 		{type: "Hobby", layer: 60}, 
 		{type: "Food", layer: 70},];
-const bodyTypes = ["SAMMY", "COOKIE"];
+const bodyTypes = ["SAMMY", "COOKIE", "RANDOMDUDE"];
 
 
 // The Game class should hold all other elements, and should fill the entire frame
@@ -75,7 +75,7 @@ export default class Game extends React.Component {
       audioPlaying: true,
   		snapToSammi: 1, // Determines whether snap-to-sammi functionality is turned on
   		inputSequence: "", // Current sequence of keys that were inputted. Used for unlocking Sammi.
-  		bodyType: "RandomDude",
+  		bodyType: "RANDOMDUDE",
     }
 
 		document.body.style.background = "#f3f3f3 url("+getImg('BackgroundBedroom')+") no-repeat left top";
